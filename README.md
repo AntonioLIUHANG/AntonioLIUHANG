@@ -1,4 +1,4 @@
-*****************A.1*****************
+[*****************A.1*****************
 #include<bits/stdc++.h>
 using namespace std;
 const int maxn=1e5;
@@ -823,4 +823,652 @@ int main() {
     cout<<"最后剩下的人: "<<*pos<<"\n";
     return 0;
 }
+**************************C.19*************************
+#include <bits/stdc++.h>
+using namespace std;
+unordered_set<int>myhash;
+int main() {
+	vector<int>a,b,c;
+	int n,x;
+	cin>>n;
+	for(int i=0;i<n;++i){
+		cin>>x;
+		a.push_back(x);
+		myhash.insert(x);
+	}
+	cin>>n;
+	for(int i=0;i<n;++i){
+		cin>>x;
+		b.push_back(x);
+		if(myhash.count(x)){
+			c.push_back(x);
+		}
+		else{
+			myhash.insert(x);
+		}
+	}
+	cout<<"交集为:";
+	for(auto &x:c) cout<<x<<" ";
+	cout<<"\n";
+	cout<<"并集为:";
+	for(auto &x:myhash) cout<<x<<" ";
+	cout<<"\n";
+	  
+	
+	return 0;
+	
+}
+*************C.20**************
+#include<bits/stdc++.h>
+using namespace std;
+list<int>l;
+list<int>l1,l2; 
+int main() {
+	string s;
+	cout<<"请输入原始链表:"<<"\n";
+	cin>>s;
+	int i=0;
+	while(i<s.size()){
+		string temp;
+		while(i<s.size()&&isdigit(s[i])){
+			temp+=s[i++];
+		}
+		if(!temp.empty()) l.push_back(stoi(temp)); 
+		++i; 
+	}
+	bool f=true;
+	for(auto &x:l){
+		if(f){
+			l1.push_back(x);
+		}
+		else{
+			l2.push_back(x);
+		}
+		f=!f;
+	}
+	cout<<"奇数链表:";
+	for(auto pos=l1.begin();pos!=l1.end();pos++){
+		if(pos==l1.begin()) cout<<*pos;
+		else cout<<"->"<<*pos;
+	}
+	cout<<"\n";
+	cout<<"偶数链表:";
+	for(auto pos=l2.begin();pos!=l2.end();pos++){
+		if(pos==l2.begin()) cout<<*pos;
+		else cout<<"->"<<*pos;
+	}
+	cout<<"\n";
+	return 0;
+}
+**************C.21****************
+#include<bits/stdc++.h>
+using namespace std;
+vector<int>a;
+vector<int>b;
+int main() {
+	int n;
+	cin>>n;
+	int x;
+	cout<<"输入第一个序列"<<"\n"; 
+	for(int i=1;i<=n;i++){
+		cin>>x;
+		a.emplace_back(x);
+	}
+	cout<<"输入第二个序列"<<"\n"; 
+	for(int i=1;i<=n;i++){
+		cin>>x;
+		b.emplace_back(x);	
+	}
+	int i=0,j=0,k=0;
+	double sum=0;
+	while(i<n&&j<n){
+		if(a[i]<=b[j]){
+			++k;
+			if(k==n) sum+=a[i];
+			else if(k==n+1){
+				sum+=a[i];
+				break;
+			}
+			++i;
+		}
+		else{
+			++k;
+			if(k==n) sum+=b[j];
+			else if(k==n+1){
+				sum+=b[j];
+				break;
+			}
+			++j;
+		}
+	}
+	if(i>=n){
+		sum+=b[0];
+	}
+	else if(j>=n){
+		sum+=a[0];
+	}
+	cout<<"中位数为："<<double(sum/2)<<"\n";
+	
+	return 0;
+}
+***********C.23***********
+#include<bits/stdc++.h>
+using namespace std;
 
+int main() {
+	string s,t;
+	cout<<"输入入栈的字符串"<<"\n";
+	cin>>s;
+	cout<<"输入出栈的字符串"<<"\n";
+	cin>>t;
+	reverse(s.begin(),s.end());
+	if(s==t){
+		cout<<"是合法的出栈序列"<<"\n";
+	}
+	else{
+		cout<<"不是合法的出栈序列"<<"\n";
+	}
+	return 0;
+}
+*************C.25**************
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn = 1e6 +10;
+const int maxm = 5e5 + 10;
+//#define int long long
+#define MIN(a,b)  (((a)<(b))?(a):(b))
+#define MAX(a,b)  (((a)>(b))?(a):(b))
+/* KMP算法 */
+string s1, s2;
+int Next[maxn]; 
+void getNext() {
+    Next[0] = -1;
+    for (int i = 1; i < s2.size(); ++i) {
+        int j = Next[i - 1];
+        while (j != -1 && s2[j + 1] != s2[i]) {
+            j = Next[j];
+        }
+        if (s2[j + 1] == s2[i]) {
+            Next[i] = j + 1;
+        } else {
+            Next[i] = -1;
+        }
+    }
+}
+void next_init(){
+	Next[0] = 0;
+	int k = 0;
+	for (int i = 1, j = 0; i < s2.size(); i++) {
+		while (j > 0 && s2[i] != s2[j]) {
+			j = Next[j-1]; 
+		}
+		if (s2[i] == s2[j]) {
+			j++;
+		}
+		Next[++k] = j; 
+	}
+}
+signed main() {
+	cout<<"输入匹配串"<<"\n";
+	cin >> s1;
+	cout<<"输入模式串"<<"\n";
+	cin>> s2;
+	getNext(); 
+	//next_init();
+	for (int i = 0, j = 0; i < s1.size(); i++) {
+		while (j > 0 && s1[i] != s2[j]) {
+			j = Next[j - 1];
+		}
+		if (s1[i] == s2[j]) j++;
+		if (j == s2.size()) {
+			j = Next[j - 1];
+			cout<<"模式串第一次出现的位置为:"<<i + 2 - s2.size()<<"\n";
+			return 0;
+		}
+	}
+	cout<<"无法匹配"<<"\n";
+}
+****************C.26****************
+#include<bits/stdc++.h>
+using namespace std;
+int main() {
+	string s;
+	cout<<"输入为格式化的英文句子:"<<"\n";
+	getline(cin,s);
+	cout<<"格式化后的英文句子为:"<<"\n";
+	int i=0;
+	while(i<s.size()&&s[i]==' ') ++i; //去除开头空格 
+	while(i<s.size()){
+		while(i<s.size()&&s[i]!=' '){
+			cout<<s[i];
+			++i;
+		}
+		if(i<s.size()-1) cout<<" ";
+		while(i<s.size()&&s[i]==' ') ++i;
+	}
+	cout<<"\n";
+	return 0;
+}
+************C.27*************
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=10;
+struct matrix {
+    int c[maxn][maxn]; //矩阵
+    int n;
+} a,b;
+matrix operator*(const matrix& x, const matrix& y) { //重构*符号
+    /* 初始化矩阵 */
+    matrix a;
+    for (int i = 1; i <= x.n; i++) {
+        for (int j = 1; j <= x.n; j++) a.c[i][j] = 0;
+    }
+    /* 矩阵乘法 */
+    for (int i = 1; i <= x.n; i++) { 
+        for (int j = 1; j <= x.n; j++) {
+            for (int k = 1; k <= x.n; k++) {
+                a.c[i][j] += x.c[i][k] * y.c[k][j];
+            }
+        }
+    }
+    return a;
+}
+matrix operator+(const matrix &x, const matrix &y){
+    /* 初始化矩阵 */
+    matrix a;
+    for (int i = 1; i <= x.n; i++) {
+        for (int j = 1; j <= x.n; j++) a.c[i][j] = 0;
+    }
+    /* 矩阵加法 */
+    for(int i=1;i<=x.n;i++){
+        for(int j=1;j<=x.n;j++){
+            a.c[i][j]=x.c[i][j]+y.c[i][j];
+        }
+    }
+    return a;
+}
+int main() {
+    cout<<"输入第一个3*3矩阵"<<"\n";
+    for(int i=1;i<=3;i++){
+        for(int j=1;j<=3;j++){
+            cin>>a.c[i][j];
+        }
+    }
+    cout<<"输入第二个3*3矩阵"<<"\n";
+    for(int i=1;i<=3;i++){
+        for(int j=1;j<=3;j++){
+            cin>>b.c[i][j];
+        }
+    }
+    a.n=3;
+    matrix sum=a+b;
+    matrix multiply=a*b;
+    cout<<"3*3矩阵相加"<<"\n";
+    for(int i=1;i<=3;i++){
+        for(int j=1;j<=3;j++){
+            cout<<sum.c[i][j]<<" ";
+        }
+        cout<<"\n";
+    }
+    cout<<"3*3矩阵相乘"<<"\n";
+    for(int i=1;i<=3;i++){
+        for(int j=1;j<=3;j++){
+            cout<<multiply.c[i][j]<<" ";
+        }
+        cout<<"\n";
+    }
+    cout<<"输入第一个4*4矩阵"<<"\n";
+    for(int i=1;i<=4;i++){
+        for(int j=1;j<=4;j++){
+            cin>>a.c[i][j];
+        }
+    }
+    cout<<"输入第二个4*4矩阵"<<"\n";
+    for(int i=1;i<=4;i++){
+        for(int j=1;j<=4;j++){
+            cin>>b.c[i][j];
+        }
+    }
+    a.n=4;
+    sum=a+b;
+    multiply=a*b;
+    cout<<"4*4矩阵相加"<<"\n";
+    for(int i=1;i<=4;i++){
+        for(int j=1;j<=4;j++){
+            cout<<sum.c[i][j]<<" ";
+        }
+        cout<<"\n";
+    }
+    cout<<"4*4矩阵相乘"<<"\n";
+    for(int i=1;i<=4;i++){
+        for(int j=1;j<=4;j++){
+            cout<<multiply.c[i][j]<<" ";
+        }
+        cout<<"\n";
+    }
+    return 0;
+}
+*************C.29*************
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn=1e5;
+struct TreeNode{
+	int val,left,right;
+}t[maxn];
+int main() {
+	int n;
+	cin>>n;
+	for(int i=1;i<=n;i++){
+		cin>>t[i].val>>t[i].left>>t[i].right;
+	}
+	/* 层序遍历 */
+	queue<int>q;
+	q.push(1);
+	bool flag=false;
+	int depth=0,cnt=1;
+	while(!q.empty()){
+		int n=q.size();
+		bool f=true;
+		++depth;
+		while(n--){
+			int node=q.front();q.pop();
+			if(t[node].left!=-1){
+				q.push(t[node].left);
+				++cnt;
+				if(!f) flag=true;
+			}
+			else f=false;
+			if(t[node].right!=-1){
+				q.push(t[node].right);
+				if(!f) flag=true;
+				++cnt;
+			}
+			else f=false;
+		}
+	}
+	cout<<"该二叉树为:";
+	if(cnt==(1<<depth)-1) cout<<"满二叉树"<<"\n";
+	else{
+		if(flag) cout<<"普通二叉树"<<"\n";
+		else cout<<"完全二叉树"<<"\n" ;
+	}
+	return 0;
+}
+************C.32************
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn=1e5;
+struct node{
+	int left,right;
+	char val;
+}t[maxn];
+vector<int>path;
+bool flag=false;
+void dfs(int i){
+	if(i==-1 ||flag) return;
+	if(t[i].val=='F'){
+		path.push_back(i);
+		flag=true;
+		cout<<"路径为"<<path[0]; 
+		for(int k=1;k<path.size();++k){
+			cout<<"->"<<path[k];
+		}
+		cout<"\n";
+		return;
+	}
+	path.push_back(i); 
+	dfs(t[i].left); 
+	path.pop_back();	
+	path.push_back(i);
+	dfs(t[i].right);
+	path.pop_back();	
+}
+int main() {
+	int n;
+	cin>>n;
+	for(int i=1;i<=n;++i){
+		cin>>t[i].val>>t[i].left>>t[i].right;
+	}
+	dfs(1);
+	if(!flag) cout<<"F不存在！"<<"\n";
+	return 0;
+}
+****************C.33***************
+#include <bits/stdc++.h>
+using namespace std;
+const int maxn=1e5;
+char a[maxn],b[maxn],c[maxn],d[maxn];
+struct BinaryTreeNode {
+	char m_key;
+	BinaryTreeNode* m_pLeft;
+	BinaryTreeNode* m_pRight;
+};
+BinaryTreeNode* constructPreMid(char* preOrder, char* midOrder, int len) {
+	if (preOrder == nullptr || midOrder == nullptr || len == 0) return nullptr;
+	char rootKey = preOrder[0];
+	BinaryTreeNode* root = new BinaryTreeNode();
+	root->m_key = rootKey;
+	root->m_pLeft = nullptr;
+	root->m_pRight = nullptr;
+	if (len == 1) {
+		if (*preOrder == *midOrder) {
+			return root;
+		}
+		else {
+			return nullptr;
+		}
+	}
+	char* rootMidOrder = midOrder;
+	int leftLen = 0;
+	while (*rootMidOrder != rootKey && leftLen < len) {
+		++rootMidOrder;
+		++leftLen;
+	}
+	if (*rootMidOrder != rootKey) return nullptr;
+
+	if (leftLen > 0) {
+		root->m_pLeft = constructPreMid(preOrder + 1, midOrder, leftLen);
+	}
+	if (len - leftLen - 1 > 0) {
+		root->m_pRight = constructPreMid(preOrder + leftLen + 1, rootMidOrder + 1, len - leftLen - 1);
+	}
+	return root;
+}
+void PrePrintTreeNode(BinaryTreeNode*& root) {
+	if (!root) return;
+	cout << root->m_key << " ";
+	PrePrintTreeNode(root->m_pLeft);
+	PrePrintTreeNode(root->m_pRight);
+}
+int main() {
+	cout<<"输入节点个数"<<"\n"; 
+	int n;
+	cin>>n;
+	cout<<"输入前序遍历"<<"\n";
+	for(int i=0;i<n;i++){
+		cin>>a[i];
+	}
+	cout<<"输入中序遍历"<<"\n";
+	for(int i=0;i<n;i++){
+		cin>>b[i];
+	}
+	BinaryTreeNode* root1=constructPreMid(a,b,n);
+	cout<<"前序和中序构造二叉树"<<"\n";
+	PrePrintTreeNode(root1);
+	cout<<"\n";
+	return 0;
+}
+************C.36*************
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=100;
+int graph[maxn][maxn]; //邻接表 
+vector<int>e[maxn];//邻接矩阵 
+vector<int>e2[maxn];
+int graph2[maxn][maxn];
+int main() {
+	int n,m;
+	cout<<"输入点的个数:";
+	cin>>n;
+	cout<<"输入边的个数";
+	cin>>m;
+	cout<<"输入邻接矩阵"<<"\n";
+	for(int i=1;i<=n;++i){
+		for(int j=1;j<=n;++j){
+			cin>>graph[i][j];
+		}
+	} 
+	cout<<"输入邻接表"<<"\n";
+	for(int i=1;i<=m;++i){
+		int x,y;
+		cin>>x>>y;
+		graph[x][y]=1;
+	}
+	/* 将邻接表转为邻接矩阵 */
+	for(int u=1;u<=n;++u){
+		for(auto &v:e[u]){
+			graph2[u][v]=1;
+		}
+	}
+	cout<<"将邻接表转为邻接矩阵"<<"\n";
+	/* 打印转换后的邻接表 */ 
+	for(int i=1;i<=n;++i){ 
+		for(int j=1;j<=n;++j){
+			cout<<graph[i][j]<<" ";
+		}
+		cout<<"\n";
+	}  
+	/* 将邻接矩阵转换为邻接表 */
+	for(int i=1;i<=n;++i){
+		for(int j=1;j<=n;++j){
+			if(graph[i][j]&&i!=j){
+				e2[i].push_back(j);
+			}
+		}
+	} 
+	cout<<"将邻接矩阵转为邻接表"<<"\n";
+	/* 打印转换后的邻接表 */
+	for(int u=1;u<=n;++u){
+		if(e2[u].empty()) continue;
+		cout<<u<<" : "; 
+		for(auto &v:e2[u]){
+			cout<<v<<" ";
+		}
+		cout<<"\n";
+	}
+	
+	return 0;
+}
+***********C.44***************
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn = 1e5 + 10;
+const int maxm = 1e5 + 10;
+//#define int long long
+#define MIN(a,b)  (((a)<(b))?(a):(b))
+#define MAX(a,b)  (((a)>(b))?(a):(b))
+/* Kosaraju算法求强连通分量 */
+vector<int>e[maxn];//原图
+vector<int>re[maxn];//逆图
+vector<int>S;  //存储第一次DFS：标记点的顺序
+bitset<maxn>vis;
+int mark[maxn];//标记强连通分量
+vector<int>scc[maxn]; //强连通分量元素
+int cnt; //强连通分量的个数
+void dfs1(int u) { //用于得到初始的顺序
+	if (vis[u]) return;
+	vis[u] = 1;
+	for (auto& v : e[u]) {
+		dfs1(v);
+		S.push_back(u); //记录点的递归访问顺序
+	}
+}
+void dfs2(int u) {//用于标记每一块强连通分量
+	if (mark[u]) return; //强连通分量已经标记了
+	mark[u] = cnt; //开始标记
+	scc[cnt].push_back(u);
+	for (auto& v : re[u]) { //遍历逆图
+		dfs2(v);
+	}
+}
+void Kosaraju(int n) { //Kosaraju算法
+	/* 清零操作 */
+	cnt = 0;
+	S.clear();
+	vis.reset();
+	memset(mark, 0, sizeof(mark));
+	for (int i = 1; i <= n; i++) {
+		dfs1(i); //遍历原图得到顺序
+	}
+	for (int i = n - 1; i >= 0; i--) {//注意这里是倒着遍历
+		if (!mark[S[i]]) { //寻找隔离块
+			cnt++;
+			dfs2(S[i]); //进行标记
+		}
+	}
+}
+signed main() {
+	int n, m;
+	cin >> n >> m;
+	while (m--) {
+		int x, y;
+		cin >> x >> y;
+		e[x].push_back(y); //建立原图
+		re[y].push_back(x);//建立逆图
+	}
+	Kosaraju(n);//开始跑Kosaraju算法
+	cout <<"共有"<< cnt <<"个强连通分量"<<"\n";
+	for (int i = 1; i <= cnt; i++) {
+		if (scc[i].empty()) continue;
+		for (auto& x : scc[i]) {
+			cout << x << " ";
+		}
+		cout << "\n";
+	}
+
+}
+**************C.45***************
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn = 100 + 10;
+const int maxm = 5e5 + 10;
+//#define int long long
+#define MIN(a,b)  (((a)<(b))?(a):(b))
+#define MAX(a,b)  (((a)>(b))?(a):(b))
+int in[maxn]; //入度
+vector<int>e[maxn]; //邻接表
+bitset<maxn> vis;
+/* 拓扑排序 */
+signed main() {
+	int n,m;
+	cin >> n>>m;
+	for (int i = 1; i <= m; i++) { //建图、统计度数
+		int x,y;		
+		cin>>x>>y;
+		e[x].push_back(y);
+		in[y]++;
+	}
+	queue<int>q; //用于bfs的队列
+	for (int i = 1; i <= n; i++) {
+		if (in[i] == 0) {
+			q.push(i);
+			vis[i] = 1; //标记为弹出队列
+		}
+	}
+	cout<<"一个可行的拓扑排序为: ";
+	while (!q.empty()) {
+		int n = q.size();
+		int node = q.front();
+		q.pop();
+		cout << node << " ";
+		for (auto& x : e[node]) {
+			if (vis[x]) continue;
+			in[x]--;
+			if (in[x] == 0) { //度数为0入队，表示可以出队
+				q.push(x);
+				vis[x] = 1;
+			}
+		}
+	}
+	cout << "\n";
+}
